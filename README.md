@@ -19,15 +19,14 @@ Paste jacking is a class of attacks where the content pasted by a user differs f
 - Credential harvesting via fake login pages
 - Data exfiltration through manipulated commands
 
-## 🧪 Live Demo
-
-[![Open in GitHub Pages](https://github.com/Epic-Destroye-Op/Paste-Jacking-Educational-Lab)
-
 ## 🛠️ Installation
 
 To run locally:
 
 ```bash
-git clone https://github.com/yourusername/paste-jacking-lab.git
+git clone https://github.com/Epic-Destroye-Op/Paste-Jacking-Educational-Lab.git
 cd paste-jacking-lab
 python3 -m http 8080
+```
+---
+made by epicdestroyerop
