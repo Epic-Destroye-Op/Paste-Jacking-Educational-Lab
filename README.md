@@ -26,7 +26,11 @@ To run locally:
 ```bash
 git clone https://github.com/Epic-Destroye-Op/Paste-Jacking-Educational-Lab.git
 cd Paste-Jacking-Educational-Lab
-python3 -m http 8080
+python3 -m http.server 8080
 ```
 ---
-made by epicdestroyerop
+# Running
+- () **just go to your browser and navigate to http://localhost:8080, then enjoy learning!!**
+---
+
+                                                                made by epicdestroyerop
