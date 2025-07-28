@@ -25,7 +25,7 @@ To run locally:
 
 ```bash
 git clone https://github.com/Epic-Destroye-Op/Paste-Jacking-Educational-Lab.git
-cd paste-jacking-lab
+cd Paste-Jacking-Educational-Lab
 python3 -m http 8080
 ```
 ---
